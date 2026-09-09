@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>দৈনিক খরচের সীমা ক্যালকুলেটর | বেতন পর্যন্ত টাকা ভাগ করুন — TakaPlan BD</title>
+<meta name="description" content="বেতন পাওয়ার আগ পর্যন্ত হাতে থাকা টাকা দিয়ে প্রতিদিন সর্বোচ্চ কত খরচ করতে পারবেন তা বিনামূল্যে হিসাব করুন। বাংলাদেশের পরিবারের জন্য সহজ বাংলা অর্থ-পরিকল্পনা টুল।">
+<meta name="keywords" content="দৈনিক খরচ ক্যালকুলেটর, বাজেট ক্যালকুলেটর, বেতন খরচ হিসাব, টাকা সাশ্রয়, বাংলা বাজেট টুল">
+<meta property="og:title" content="দৈনিক খরচের সীমা ক্যালকুলেটর — TakaPlan BD">
+<meta property="og:description" content="বেতন পর্যন্ত প্রতিদিন কত টাকা খরচ করা নিরাপদ, সহজে হিসাব করুন।">
+<meta property="og:type" content="website">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Segoe UI','Noto Sans Bengali',Arial,sans-serif;
+    background:linear-gradient(135deg,#0f766e 0%,#065f46 100%);
+    color:#1f2937; line-height:1.7; min-height:100vh; padding:16px;
+  }
+  .container { max-width:720px; margin:0 auto; }
+  header { text-align:center; color:#fff; padding:24px 12px 8px; }
+  header h1 { font-size:1.6rem; margin-bottom:6px; }
+  header p { opacity:.9; font-size:.95rem; }
+  .card {
+    background:#fff; border-radius:16px; padding:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15); margin:18px 0;
+  }
+  .card h2 { color:#065f46; font-size:1.2rem; margin-bottom:14px; }
+  label { display:block; font-weight:600; margin:14px 0 6px; font-size:.95rem; }
+  input {
+    width:100%; padding:12px 14px; border:2px solid #d1d5db;
+    border-radius:10px; font-size:1rem; transition:border .2s;
+  }
+  input:focus { outline:none; border-color:#0f766e; }
+  button {
+    width:100%; margin-top:20px; padding:14px; background:#0f766e;
+    color:#fff; border:none; border-radius:10px; font-size:1.05rem;
+    font-weight:700; cursor:pointer; transition:background .2s;
+  }
+  button:hover { background:#0d5f58; }
+  .result {
+    margin-top:20px; padding:20px; border-radius:12px;
+    background:#ecfdf5; border:2px solid #10b981; display:none;
+  }
+  .result.show { display:block; }
+  .result .big { font-size:2rem; font-weight:800; color:#065f46; text-align:center; }
+  .result .sub { text-align:center; color:#374151; margin-top:6px; }
+  .rows { margin-top:16px; }
+  .row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #d1d5db; }
+  .row span:last-child { font-weight:700; }
+  .warn { color:#b91c1c; }
+  .ad-slot {
+    background:#f3f4f6; border:1px dashed #9ca3af; border-radius:10px;
+    padding:18px; text-align:center; color:#6b7280; font-size:.85rem; margin:18px 0;
+  }
+  article h2 { color:#065f46; margin:18px 0 8px; font-size:1.15rem; }
+  article h3 { color:#0f766e; margin:14px 0 6px; font-size:1.02rem; }
+  article p, article li { color:#374151; font-size:.95rem; margin-bottom:8px; }
+  article ul, article ol { padding-left:22px; margin-bottom:10px; }
+  footer { text-align:center; color:#e5e7eb; font-size:.85rem; padding:20px 10px; }
+  footer a { color:#fff; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>💰 দৈনিক খরচের সীমা ক্যালকুলেটর</h1>
+    <p>বেতন পাওয়ার আগ পর্যন্ত প্রতিদিন কত টাকা খরচ করা নিরাপদ — সহজে জানুন</p>
+  </header>
+
+  <div class="card">
+    <h2>আপনার তথ্য দিন</h2>
+
+    <label for="balance">এখন হাতে/অ্যাকাউন্টে মোট কত টাকা আছে? (৳)</label>
+    <input type="number" id="balance" placeholder="যেমন: ৮০০০" inputmode="numeric">
+
+    <label for="days">পরবর্তী বেতন পেতে আর কত দিন বাকি?</label>
+    <input type="number" id="days" placeholder="যেমন: ১৫" inputmode="numeric">
+
+    <label for="fixed">এর মধ্যে নির্দিষ্ট খরচ কত? (বাড়িভাড়া, বিল, কিস্তি — ৳)</label>
+    <input type="number" id="fixed" placeholder="যেমন: ৩০০০ (না থাকলে ০)" inputmode="numeric">
+
+    <label for="save">এই সময়ে কত টাকা জমাতে চান? (৳)</label>
+    <input type="number" id="save" placeholder="যেমন: ৫০০ (না থাকলে ০)" inputmode="numeric">
+
+    <button onclick="calculate()">হিসাব করুন</button>
+
+    <div class="result" id="result">
+      <div class="big" id="perDay">৳০</div>
+      <div class="sub">প্রতিদিন সর্বোচ্চ খরচ করতে পারবেন</div>
+      <div class="rows" id="rows"></div>
+    </div>
+  </div>
+
+  <div class="ad-slot">এখানে পরে বিজ্ঞাপন বসবে (Google AdSense)</div>
+
+  <article class="card">
+    <h2>কীভাবে বেতন পর্যন্ত টাকা ভাগ করে খরচ করবেন?</h2>
+    <p>মাসের শেষে টাকা ফুরিয়ে যাওয়া বাংলাদেশের বহু পরিবারের একটি সাধারণ সমস্যা। কম আয়ে সংসার চালাতে হলে হাতে থাকা টাকা পরিকল্পিতভাবে ভাগ করে খরচ করা খুবই জরুরি। এই টুলটি ঠিক সেই কাজেই সাহায্য করে — এটি আপনাকে জানায় বেতন পাওয়ার আগ পর্যন্ত প্রতিদিন সর্বোচ্চ কত টাকা খরচ করলে আপনি সমস্যায় পড়বেন না।</p>
+
+    <h3>হিসাবটি কীভাবে কাজ করে</h3>
+    <p>টুলটি একটি সহজ নিয়ম মেনে চলে:</p>
+    <ol>
+      <li>আপনার হাতে থাকা মোট টাকা থেকে প্রথমে <b>নির্দিষ্ট খরচ</b> (বাড়িভাড়া, বিদ্যুৎ বিল, কিস্তি) বাদ দেওয়া হয়।</li>
+      <li>এরপর আপনার <b>সঞ্চয়ের লক্ষ্য</b> বাদ দেওয়া হয়, যাতে জমানোর টাকা আলাদা থাকে।</li>
+      <li>যা বাকি থাকে, সেটিকে <b>বাকি দিনের সংখ্যা</b> দিয়ে ভাগ করা হয়।</li>
+    </ol>
+    <p>ফলে আপনি একটি নিরাপদ দৈনিক সীমা পান, যার মধ্যে থাকলে বেতনের আগে টাকা ফুরাবে না।</p>
+
+    <h3>কম আয়ে সংসার চালানোর ৫টি সহজ পরামর্শ</h3>
+    <ul>
+      <li><b>আগে জরুরি খরচ:</b> খাবার, ওষুধ ও যাতায়াতকে সবার আগে রাখুন।</li>
+      <li><b>ছোট সঞ্চয়ও গুরুত্বপূর্ণ:</b> প্রতিদিন সামান্য টাকা জমালেও মাস শেষে তা কাজে লাগে।</li>
+      <li><b>প্রতিদিন খরচ লিখে রাখুন:</b> কোথায় টাকা যাচ্ছে জানলে অপচয় কমে।</li>
+      <li><b>মোবাইল ব্যাংকিং চার্জ খেয়াল রাখুন:</b> বারবার ক্যাশ-আউট করলে চার্জ বেড়ে যায়।</li>
+      <li><b>প্রয়োজন ও শখ আলাদা করুন:</b> কেনার আগে ভাবুন এটি এখন সত্যিই দরকার কি না।</li>
+    </ul>
+
+    <h3>প্রশ্ন-উত্তর</h3>
+    <p><b>প্রশ্ন: এই টুল ব্যবহার করতে কি টাকা লাগে?</b><br>না, এটি সম্পূর্ণ বিনামূল্যে এবং যতবার খুশি ব্যবহার করা যায়।</p>
+    <p><b>প্রশ্ন: আমার তথ্য কি কোথাও জমা হয়?</b><br>না। সব হিসাব আপনার নিজের ফোন/কম্পিউটারেই হয়, কোনো তথ্য সংরক্ষণ করা হয় না।</p>
+  </article>
+
+  <div class="ad-slot">এখানে পরে বিজ্ঞাপন বসবে (Google AdSense)</div>
+
+  <footer>
+    <p>© <span id="year"></span> TakaPlan BD — বাংলাদেশের পরিবারের জন্য বিনামূল্যে অর্থ-পরিকল্পনা টুল</p>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function calculate() {
+    const balance = parseFloat(document.getElementById('balance').value) || 0;
+    const days = parseInt(document.getElementById('days').value) || 0;
+    const fixed = Math.max(0, parseFloat(document.getElementById('fixed').value) || 0);
+    const save = Math.max(0, parseFloat(document.getElementById('save').value) || 0);
+    const result = document.getElementById('result');
+    const rows = document.getElementById('rows');
+    const perDayEl = document.getElementById('perDay');
+
+    if (balance <= 0 || days <= 0) {
+      result.classList.add('show');
+      perDayEl.innerHTML = '<span class="warn">তথ্য ঠিক নয়</span>';
+      rows.innerHTML = '<p class="warn" style="text-align:center">অনুগ্রহ করে সঠিক টাকা ও দিনের সংখ্যা দিন।</p>';
+      return;
+    }
+
+    const spendable = balance - fixed - save;
+    const perDay = spendable / days;
+
+    rows.innerHTML =
+      '<div class="row"><span>মোট টাকা</span><span>৳' + balance.toLocaleString('bn-BD') + '</span></div>' +
+      '<div class="row"><span>নির্দিষ্ট খরচ (−)</span><span>৳' + fixed.toLocaleString('bn-BD') + '</span></div>' +
+      '<div class="row"><span>সঞ্চয় (−)</span><span>৳' + save.toLocaleString('bn-BD') + '</span></div>' +
+      '<div class="row"><span>খরচযোগ্য টাকা</span><span>৳' + spendable.toLocaleString('bn-BD') + '</span></div>' +
+      '<div class="row"><span>বাকি দিন</span><span>' + days.toLocaleString('bn-BD') + ' দিন</span></div>';
+
+    result.classList.add('show');
+
+    if (spendable <= 0) {
+      perDayEl.innerHTML = '<span class="warn">সতর্কতা!</span>';
+      rows.innerHTML += '<p class="warn" style="text-align:center;margin-top:10px">আপনার নির্দিষ্ট খরচ ও সঞ্চয় মিলে হাতের টাকার চেয়ে বেশি হয়ে গেছে। খরচ কমানো বা সঞ্চয়ের লক্ষ্য কমানো দরকার।</p>';
+    } else {
+      perDayEl.textContent = '৳' + perDay.toLocaleString('bn-BD', {maximumFractionDigits:0});
+    }
+  }
+</script>
+</body>
+</html>
